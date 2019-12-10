@@ -28,7 +28,7 @@ function convertToJson (response) {
 }
 
 function makeListItems(response){
-    response.push("all jokes");
+    response.push(CATEGORY);
     let li = document.createElement("li");
     for (let i=0; i< response.length;i++){
         li.textContent = response[i];
