@@ -5,13 +5,14 @@
 let CATEGORY = "all jokes";
 let buttons = [];
 let catsDomArr = [];
-const jokeServerAddres = "https://api.chucknorris.io/jokes/random";
+const jokeServerAddress = "https://api.chucknorris.io/jokes/random";
+const jokeCategoryAddress = "https://api.chucknorris.io/jokes/categories";
 
 function makeACatArray(){
-        return fetch("https://api.chucknorris.io/jokes/categories")
-        .then(convertToJson)
-        .then(makeListItems)
-        .then(attachArrToContainer)
+        return fetch(jokeCategoryAddress)
+                    .then(convertToJson)
+                    .then(makeListItems)
+                    .then(attachArrToContainer)
 }
 
 function attachArrToContainer(arr){
@@ -23,11 +24,10 @@ function extractJoke(dataObject){
 }
 
 function convertToJson (response) {
-    console.log(response);
     return response.json();
 }
+
 function makeListItems(response){
-    console.log(response);
     response.push("all jokes");
     let li = document.createElement("li");
     for (let i=0; i< response.length;i++){
@@ -45,39 +45,29 @@ function rendersJokesToPage(jokeString){
     document.body.appendChild(h1);
 }
 
-function fetchJoke(){
+function fetchJokeAction(){
     if (CATEGORY == "all jokes"){
-        fetch(jokeServerAddres)
+        fetch(jokeServerAddress)
             .then(convertToJson)
             .then(extractJoke)
             .then(rendersJokesToPage)
     } else {
-        fetch(`${jokeServerAddres}?category=${CATEGORY}`)
+        fetch(`${jokeServerAddress}?category=${CATEGORY}`)
             .then(convertToJson)
             .then(extractJoke)
             .then(rendersJokesToPage)
-
-
     }
 }
 
-function fetchJokeAction(){
+function fetchOneJoke(){
     clear();
-    fetchJoke();
+    fetchJokeAction();
 }
 
-function jokeButton(){
-    const button = document.createElement("button");
-    button.textContent = "heres a joke button";
-    button.addEventListener("click",fetchJokeAction);
-    document.body.appendChild(button);
-    return button;
-}
-
-function fetchMultipleJoke(){
+function fetchMultipleJokes(){
     clear();
     for(let i =0; i<5;i++){
-        fetchJoke();
+        fetchJokeAction();
     }
 }
 
@@ -87,10 +77,18 @@ function clear(){
     attachArrToContainer(buttons);
 }
 
+function jokeButton(){
+    const button = document.createElement("button");
+    button.textContent = "heres a joke button";
+    button.addEventListener("click",fetchOneJoke);
+    document.body.appendChild(button);
+    return button;
+}
+
 function jokeMultipleButton(){
     const button = document.createElement("button");
     button.textContent = "heres a 5 joke button";
-    button.addEventListener("click",fetchMultipleJoke);
+    button.addEventListener("click",fetchMultipleJokes);
     document.body.appendChild(button);
     return button;
 }
